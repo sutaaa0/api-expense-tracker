@@ -1,4 +1,4 @@
-const { findTransactionsByUser } = require("./transaction.repository");
+const { findTransactionsByUser, insertTransaction } = require("./transaction.repository");
 
 const getTransactionsByUser = async (userId) => {
     const transactions = await findTransactionsByUser(userId);
@@ -10,4 +10,16 @@ const getTransactionsByUser = async (userId) => {
     return transactions
 }
 
-module.exports = { getTransactionsByUser }
+const createTransaction = async (transaction) => {
+    const newTransaction = await insertTransaction(transaction);
+
+    return newTransaction
+}
+
+const updateTransaction = async (id, transaction) => {
+    const updatedTransaction = await editTransaction(id, transaction);
+
+    return updatedTransaction
+}
+
+module.exports = { getTransactionsByUser, createTransaction };
