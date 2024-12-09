@@ -1,7 +1,6 @@
 const prisma = require("../db/prisma");
 
 const findTransactionsByUser = async (userId) => {
-  console.log(userId);
   const transactions = await prisma.transaction.findMany({
     where: {
       userId: userId,
@@ -18,6 +17,11 @@ const insertTransaction = async (transaction) => {
 };
 
 const editTransaction = async (id, transaction) => {
+  const existingTransaction = await prisma.transaction.findUnique({ where: { id } });
+  if (!existingTransaction) {
+    throw new Error("Transaction not found");
+  }
+
   const updatedTransaction = await prisma.transaction.update({
     where: {
       id: id,
@@ -25,6 +29,7 @@ const editTransaction = async (id, transaction) => {
     data: transaction,
   });
   return updatedTransaction;
-}
+};
+
 
 module.exports = { findTransactionsByUser, insertTransaction, editTransaction };
