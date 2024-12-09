@@ -14,37 +14,47 @@ router.get("/:userId", async (req, res) => {
   }
 });
 
-router.post("/", (req, res) => {
-  const transaction = req.body;
+router.post("/", async (req, res) => {
+  try {
+    const transaction = req.body;
 
-  if (!transaction.type || !transaction.category || !transaction.amount || !transaction.date) {
-    return res.status(400).send(error.message);
+    if (!transaction.type || !transaction.category || !transaction.amount || !transaction.date) {
+      return res.status(400).send("All fields are required");
+    }
+
+    const newTransaction = await createTransaction(transaction);
+
+    res.status(201).send({
+      data: newTransaction,
+      message: "Transaction created successfully",
+    });
+  } catch (error) {
+    res.status(500).send(error.message);
   }
-
-  const newTransaction = createTransaction(transaction);
-
-  res.send({
-    data: newTransaction,
-    message: "Transaction created successfully",
-    status: 201,
-  });
 });
 
-router.put("/:id", (req, res) => {
-  const { id } = req.params;
-  const transaction = req.body;
+router.put("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const transaction = req.body;
 
-  if (!transaction.type || !transaction.category || !transaction.amount || !transaction.date) {
-    return res.status(400).send(error.message);
+    if (!id) {
+      return res.status(400).send("Transaction ID is required");
+    }
+
+    if (!transaction.type || !transaction.category || !transaction.amount || !transaction.date) {
+      return res.status(400).send("All fields are required");
+    }
+
+    const updatedTransaction = await updateTransaction(id, transaction);
+
+    res.status(200).send({
+      data: updatedTransaction,
+      message: "Transaction updated successfully",
+    });
+  } catch (error) {
+    res.status(500).send(error.message);
   }
-
-  const updatedTransaction = updateTransaction(id, transaction);
-
-  res.send({
-    data: updatedTransaction,
-    message: "Transaction updated successfully",
-    status: 200,
-  });
 });
 
 module.exports = router;
