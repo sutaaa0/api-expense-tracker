@@ -24,6 +24,28 @@ const insertTransaction = async (transaction) => {
   return newTransaction;
 };
 
+const findMonthlyTransactionsByUser = async (userId) => {
+  const currentMonthStart = new Date();
+  currentMonthStart.setDate(1); // Set to the first day of the current month
+  currentMonthStart.setHours(0, 0, 0, 0); // Set time to midnight
+
+  const transactions = await prisma.transaction.groupBy({
+    by: ['category'],
+    where: {
+      userId: userId,
+      date: {
+        gte: currentMonthStart, // Greater than or equal to the first day of the month
+      },
+    },
+    _sum: {
+      amount: true,
+    },
+  });
+
+  return transactions;
+};
+
+
 
 const editTransaction = async (id, transaction) => {
   const existingTransaction = await prisma.transaction.findUnique({ where: { id } });
@@ -41,4 +63,4 @@ const editTransaction = async (id, transaction) => {
 };
 
 
-module.exports = { findTransactionsByUser, insertTransaction, editTransaction };
+module.exports = { findTransactionsByUser, insertTransaction, editTransaction, findMonthlyTransactionsByUser };
