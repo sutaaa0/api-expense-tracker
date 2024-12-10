@@ -1,5 +1,5 @@
 const express = require("express");
-const { getTransactionsByUser, createTransaction } = require("./transaction.service");
+const { getTransactionsByUser, createTransaction, getMonthlyTransactionsByUser } = require("./transaction.service");
 const router = express.Router();
 
 router.get("/:userId", async (req, res) => {
@@ -12,6 +12,18 @@ router.get("/:userId", async (req, res) => {
     res.status(500).send(error.message);
   }
 });
+
+router.get("/:userId/monthly-summary", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const transactions = await getMonthlyTransactionsByUser(userId);
+
+    res.send(transactions);
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+});
+
 
 router.post("/", async (req, res) => {
   try {
