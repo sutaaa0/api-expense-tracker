@@ -1,6 +1,5 @@
 const express = require("express");
 const { getTransactionsByUser, createTransaction } = require("./transaction.service");
-const { error } = require("console");
 const router = express.Router();
 
 router.get("/:userId", async (req, res) => {

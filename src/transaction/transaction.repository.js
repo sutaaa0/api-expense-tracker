@@ -10,11 +10,20 @@ const findTransactionsByUser = async (userId) => {
 };
 
 const insertTransaction = async (transaction) => {
+  const formattedDate = new Date(transaction.date).toISOString(); // Konversi ke ISO-8601
   const newTransaction = await prisma.transaction.create({
-    data: transaction,
+    data: {
+      type: transaction.type,
+      category: transaction.category,
+      amount: transaction.amount,
+      date: formattedDate,
+      notes: transaction.notes,
+      userId: transaction.userId,
+    },
   });
   return newTransaction;
 };
+
 
 const editTransaction = async (id, transaction) => {
   const existingTransaction = await prisma.transaction.findUnique({ where: { id } });
