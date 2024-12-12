@@ -9,6 +9,16 @@ const findTransactionsByUser = async (userId) => {
   return transactions;
 };
 
+const findIncomeTransactionsByUser = async (userId) => {
+  const transactions = await prisma.transaction.findMany({
+    where: {
+      userId: userId,
+      type: "income",
+    },
+  });
+  return transactions;
+}
+
 const insertTransaction = async (transaction) => {
   const formattedDate = new Date(transaction.date).toISOString(); // Konversi ke ISO-8601
   const newTransaction = await prisma.transaction.create({
@@ -64,4 +74,4 @@ const editTransaction = async (id, transaction) => {
 };
 
 
-module.exports = { findTransactionsByUser, insertTransaction, editTransaction, findMonthlyTransactionsByUser };
+module.exports = { findTransactionsByUser, insertTransaction, editTransaction, findMonthlyTransactionsByUser, findIncomeTransactionsByUser };
