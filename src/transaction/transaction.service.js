@@ -1,4 +1,4 @@
-const { findTransactionsByUser, insertTransaction, findMonthlyTransactionsByUser } = require("./transaction.repository");
+const { findTransactionsByUser, insertTransaction, findMonthlyTransactionsByUser, findIncomeTransactionsByUser } = require("./transaction.repository");
 
 const getTransactionsByUser = async (userId) => {
     const transactions = await findTransactionsByUser(userId);
@@ -9,6 +9,16 @@ const getTransactionsByUser = async (userId) => {
 
     return transactions
 }
+
+const getIncomeTransactionsByUser = async (userId) => {
+    const transactions = await findIncomeTransactionsByUser(userId);
+  
+    if (!transactions || transactions.length === 0) {
+      throw new Error("No transactions found for this month");
+    }
+  
+    return transactions.filter((transaction) => transaction.type === "income");
+  };
 
 const getMonthlyTransactionsByUser = async (userId) => {
     const transactions = await findMonthlyTransactionsByUser(userId);
@@ -36,4 +46,4 @@ const updateTransaction = async (id, transaction) => {
     return updatedTransaction
 }
 
-module.exports = { getTransactionsByUser, createTransaction, getMonthlyTransactionsByUser };
+module.exports = { getTransactionsByUser, createTransaction, getMonthlyTransactionsByUser, getIncomeTransactionsByUser };
