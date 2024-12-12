@@ -33,6 +33,7 @@ const findMonthlyTransactionsByUser = async (userId) => {
     by: ['category'],
     where: {
       userId: userId,
+      type: "expense",
       date: {
         gte: currentMonthStart, // Greater than or equal to the first day of the month
       },

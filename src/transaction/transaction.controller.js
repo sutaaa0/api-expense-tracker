@@ -24,8 +24,26 @@ router.get("/:userId/monthly-summary", async (req, res) => {
   }
 });
 
-
 router.post("/", async (req, res) => {
+  try {
+    const transaction = req.body;
+
+    if (!transaction.type || !transaction.category || !transaction.amount || !transaction.date) {
+      return res.status(400).send("All fields are required");
+    }
+
+    const newTransaction = await createTransaction(transaction);
+
+    res.status(201).send({
+      data: newTransaction,
+      message: "Transaction created successfully",
+    });
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+router.post("/income", async (req, res) => {
   try {
     const transaction = req.body;
 
