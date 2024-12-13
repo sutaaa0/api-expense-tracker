@@ -15,6 +15,10 @@ const findIncomeTransactionsByUser = async (userId) => {
       userId: userId,
       type: "income",
     },
+    orderBy: {
+      date: "desc",
+    },
+    take: 3,
   });
   return transactions;
 }
