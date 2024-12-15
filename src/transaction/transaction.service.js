@@ -23,7 +23,7 @@ const getIncomeTransactionsByUser = async (userId) => {
 const getMonthlyIncomeByUser = async (userId) => {
   const incomes = await findMonthlyIncomeTransactionsByUser(userId);
 
-  if (!incomes || transactions.incomes === 0) {
+  if (!incomes || incomes.length === 0) {
     throw new Error("No income found for this month");
   }
 
