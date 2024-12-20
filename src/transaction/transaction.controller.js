@@ -24,12 +24,38 @@ router.get("/:userId/monthly-summary", async (req, res) => {
   }
 });
 
+router.get("/:userId/totalExpense/monthly-summary", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const transactions = await getMonthlyTransactionsByUser(userId);
+
+    const totalExpense = transactions.reduce((acc, transaction) => acc + transaction.totalAmount, 0);
+
+    res.send({ totalExpense });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+});
+
 router.get("/:userId/income/monthly-summary", async (req, res) => {
   try {
     const { userId } = req.params;
     const transactions = await getMonthlyIncomeByUser(userId);
 
     res.send(transactions);
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+});
+
+router.get("/:userId/totalIncome/monthly-summary", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const transactions = await getMonthlyIncomeByUser(userId);
+
+    const totalIncome = transactions.reduce((acc, transaction) => acc + transaction.totalAmount, 0);
+
+    res.send({ totalIncome });
   } catch (error) {
     res.status(500).send({ error: error.message });
   }
