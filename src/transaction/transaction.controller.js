@@ -134,4 +134,39 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+router.post("/:userId/budget", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const budgetData = req.body;
+    const budget = await createBudget(userId, budgetData);
+
+    res.status(201).send(budget);
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+});
+
+router.get("/:userId/budget", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const budget = await getBudgetByUser(userId);
+
+    res.send(budget);
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+});
+
+router.put("/:userId/budget", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const budgetData = req.body;
+    const updatedBudget = await updateBudget(userId, budgetData);
+
+    res.send(updatedBudget);
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+});
+
 module.exports = router;
