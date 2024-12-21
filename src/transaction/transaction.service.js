@@ -58,4 +58,47 @@ const updateTransaction = async (id, transaction) => {
   return updatedTransaction;
 };
 
-module.exports = { getTransactionsByUser, createTransaction, getMonthlyTransactionsByUser, getIncomeTransactionsByUser, getMonthlyIncomeByUser };
+const insertBudget = async (userId, budgetData) => {
+  const newBudget = await prisma.budget.create({
+    data: {
+      userId: userId,
+      amount: budgetData.amount,
+      category: budgetData.category,
+      startDate: budgetData.startDate,
+      endDate: budgetData.endDate,
+    },
+  });
+  return newBudget;
+};
+
+const findBudgetByUser = async (userId) => {
+  const budget = await prisma.budget.findMany({
+    where: {
+      userId: userId,
+    },
+  });
+  return budget;
+};
+
+const editBudget = async (userId, budgetData) => {
+  const existingBudget = await prisma.budget.findFirst({
+    where: {
+      userId: userId,
+      category: budgetData.category,
+    },
+  });
+
+  if (!existingBudget) {
+    throw new Error("Budget not found");
+  }
+
+  const updatedBudget = await prisma.budget.update({
+    where: {
+      id: existingBudget.id,
+    },
+    data: budgetData,
+  });
+  return updatedBudget;
+};
+
+module.exports = { getTransactionsByUser, createTransaction, getMonthlyTransactionsByUser, getIncomeTransactionsByUser, getMonthlyIncomeByUser, updateTransaction, insertBudget, findBudgetByUser, editBudget };
