@@ -97,4 +97,26 @@ const editTransaction = async (id, transaction) => {
   return updatedTransaction;
 };
 
-module.exports = { findTransactionsByUser, insertTransaction, editTransaction, findMonthlyTransactionsByUser, findIncomeTransactionsByUser, findMonthlyIncomeTransactionsByUser };
+const createBudget = async (userId, budgetData) => {
+  const newBudget = await insertBudget(userId, budgetData);
+
+  return newBudget;
+};
+
+const getBudgetByUser = async (userId) => {
+  const budget = await findBudgetByUser(userId);
+
+  if (!budget) {
+    throw new Error("Budget not found");
+  }
+
+  return budget;
+};
+
+const updateBudget = async (userId, budgetData) => {
+  const updatedBudget = await editBudget(userId, budgetData);
+
+  return updatedBudget;
+};
+
+module.exports = { findTransactionsByUser, insertTransaction, editTransaction, findMonthlyTransactionsByUser, findIncomeTransactionsByUser, findMonthlyIncomeTransactionsByUser, createBudget, getBudgetByUser, updateBudget };
