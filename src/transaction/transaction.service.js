@@ -58,38 +58,27 @@ const updateTransaction = async (id, transaction) => {
   return updatedTransaction;
 };
 
-const insertBudget = async (userId, budgetData) => {
-  const budget = await .
+const createBudget = async (userId, budgetData) => {
+  const newBudget = await insertBudget(userId, budgetData);
+
+  return newBudget;
 };
 
-const findBudgetByUser = async (userId) => {
-  const budget = await prisma.budget.findMany({
-    where: {
-      userId: userId,
-    },
-  });
-  return budget;
-};
+const getBudgetByUser = async (userId) => {
+  const budget = await findBudgetByUser(userId);
 
-const editBudget = async (userId, budgetData) => {
-  const existingBudget = await prisma.budget.findFirst({
-    where: {
-      userId: userId,
-      category: budgetData.category,
-    },
-  });
-
-  if (!existingBudget) {
+  if (!budget) {
     throw new Error("Budget not found");
   }
 
-  const updatedBudget = await prisma.budget.update({
-    where: {
-      id: existingBudget.id,
-    },
-    data: budgetData,
-  });
+  return budget;
+};
+
+
+const updateBudget = async (userId, budgetData) => {
+  const updatedBudget = await editBudget(userId, budgetData);
+
   return updatedBudget;
 };
 
-module.exports = { getTransactionsByUser, createTransaction, getMonthlyTransactionsByUser, getIncomeTransactionsByUser, getMonthlyIncomeByUser, updateTransaction, insertBudget, findBudgetByUser, editBudget };
+module.exports = { getTransactionsByUser, createTransaction, getMonthlyTransactionsByUser, getIncomeTransactionsByUser, getMonthlyIncomeByUser, updateTransaction, createBudget, getBudgetByUser, updateBudget };
