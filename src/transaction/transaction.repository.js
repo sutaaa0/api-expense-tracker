@@ -1,5 +1,4 @@
 const prisma = require("../db/prisma");
-const { insertBudget, findBudgetByUser, editBudget } = require("./transaction.service");
 
 const findTransactionsByUser = async (userId) => {
   const transactions = await prisma.transaction.findMany({
@@ -98,26 +97,55 @@ const editTransaction = async (id, transaction) => {
   return updatedTransaction;
 };
 
-const createBudget = async (userId, budgetData) => {
-  const newBudget = await insertBudget(userId, budgetData);
 
-  return newBudget;
+const insertBudget = async (userId, budgetData) => {
+  const budget = await prisma.budget.create({
+    data: {
+      category: budgetData.category,
+      amount: budgetData.amount,
+      userId: userId,
+    },
+  });
+
+  return budget.map((budget) => {
+    return {
+      category: budget.category,
+      amount: budget.amount,
+    };
+  })
 };
 
-const getBudgetByUser = async (userId) => {
-  const budget = await findBudgetByUser(userId);
 
-  if (!budget) {
-    throw new Error("Budget not found");
-  }
-
+const findBudgetByUser = async (userId) => {
+  const budget = await prisma.budget.findMany({
+    where: {
+      userId: userId,
+    },
+  });
   return budget;
 };
 
-const updateBudget = async (userId, budgetData) => {
-  const updatedBudget = await editBudget(userId, budgetData);
 
+
+const editBudget = async (userId, budgetData) => {
+  const existingBudget = await prisma.budget.findFirst({
+    where: {
+      userId: userId,
+      category: budgetData.category,
+    },
+  });
+
+  if (!existingBudget) {
+    throw new Error("Budget not found");
+  }
+
+  const updatedBudget = await prisma.budget.update({
+    where: {
+      id: existingBudget.id,
+    },
+    data: budgetData,
+  });
   return updatedBudget;
 };
 
-module.exports = { findTransactionsByUser, insertTransaction, editTransaction, findMonthlyTransactionsByUser, findIncomeTransactionsByUser, findMonthlyIncomeTransactionsByUser, createBudget, getBudgetByUser, updateBudget };
+module.exports = { findTransactionsByUser, insertTransaction, editTransaction, findMonthlyTransactionsByUser, findIncomeTransactionsByUser, findMonthlyIncomeTransactionsByUser, insertBudget, findBudgetByUser, editBudget };
