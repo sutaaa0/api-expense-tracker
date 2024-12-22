@@ -1,4 +1,4 @@
-const { findTransactionsByUser, insertTransaction, findMonthlyTransactionsByUser, findIncomeTransactionsByUser, findMonthlyIncomeTransactionsByUser } = require("./transaction.repository");
+const { findTransactionsByUser, insertTransaction, findMonthlyTransactionsByUser, findIncomeTransactionsByUser, findMonthlyIncomeTransactionsByUser, editTransaction } = require("./transaction.repository");
 
 const getTransactionsByUser = async (userId) => {
   const transactions = await findTransactionsByUser(userId);
@@ -59,16 +59,7 @@ const updateTransaction = async (id, transaction) => {
 };
 
 const insertBudget = async (userId, budgetData) => {
-  const newBudget = await prisma.budget.create({
-    data: {
-      userId: userId,
-      amount: budgetData.amount,
-      category: budgetData.category,
-      startDate: budgetData.startDate,
-      endDate: budgetData.endDate,
-    },
-  });
-  return newBudget;
+  const budget = await .
 };
 
 const findBudgetByUser = async (userId) => {
