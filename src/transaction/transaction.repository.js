@@ -107,12 +107,7 @@ const insertBudget = async (userId, budgetData) => {
     },
   });
 
-  return budget.map((budget) => {
-    return {
-      category: budget.category,
-      amount: budget.amount,
-    };
-  })
+  return budget;
 };
 
 
