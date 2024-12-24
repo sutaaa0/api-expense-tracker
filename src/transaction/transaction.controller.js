@@ -169,4 +169,19 @@ router.put("/:userId/budget", async (req, res) => {
   }
 });
 
+router.get("/:userId/financial-summary", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const summary = await getUserFinancialSummary(userId);
+
+    if (!summary) {
+      return res.status(404).send({ error: "User data not found" });
+    }
+
+    res.send(summary);
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+});
+
 module.exports = router;
