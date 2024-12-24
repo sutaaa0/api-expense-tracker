@@ -81,6 +81,7 @@ const updateBudget = async (userId, budgetData) => {
   return updatedBudget;
 };
 
+
 const getUserFinancialSummary = async (userId) => {
   const transactions = await findTransactionsByUser(userId);
   const budget = await findBudgetByUser(userId);
@@ -89,21 +90,36 @@ const getUserFinancialSummary = async (userId) => {
     return null;
   }
 
-  const totalSpent = transactions
-    .filter(transaction => transaction.type === "expense")
-    .reduce((acc, transaction) => acc + transaction.amount, 0);
+  const calculateSummary = (transactions, periodStart) => {
+    const filteredTransactions = transactions.filter(transaction => new Date(transaction.date) >= periodStart);
 
-  const totalSaved = transactions
-    .filter(transaction => transaction.type === "income")
-    .reduce((acc, transaction) => acc + transaction.amount, 0);
+    const totalSpent = filteredTransactions
+      .filter(transaction => transaction.type === "expense")
+      .reduce((acc, transaction) => acc + transaction.amount, 0);
 
-  const totalBudget = budget.reduce((acc, b) => acc + b.amount, 0);
-  const totalBudgetLeft = totalBudget - totalSpent;
+    const totalSaved = filteredTransactions
+      .filter(transaction => transaction.type === "income")
+      .reduce((acc, transaction) => acc + transaction.amount, 0);
+
+    const totalBudget = budget.reduce((acc, b) => acc + b.amount, 0);
+    const totalBudgetLeft = totalBudget - totalSpent;
+
+    return {
+      totalSpent,
+      totalSaved,
+      totalBudgetLeft
+    };
+  };
+
+  const now = new Date();
+  const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const startOfYear = new Date(now.getFullYear(), 0, 1);
 
   return {
-    totalSpent,
-    totalSaved,
-    totalBudgetLeft
+    weekly: calculateSummary(transactions, startOfWeek),
+    monthly: calculateSummary(transactions, startOfMonth),
+    yearly: calculateSummary(transactions, startOfYear)
   };
 };
 
