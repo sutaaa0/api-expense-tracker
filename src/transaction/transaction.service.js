@@ -81,4 +81,30 @@ const updateBudget = async (userId, budgetData) => {
   return updatedBudget;
 };
 
+const getUserFinancialSummary = async (userId) => {
+  const transactions = await findTransactionsByUser(userId);
+  const budget = await findBudgetByUser(userId);
+
+  if (!transactions || !budget) {
+    return null;
+  }
+
+  const totalSpent = transactions
+    .filter(transaction => transaction.type === "expense")
+    .reduce((acc, transaction) => acc + transaction.amount, 0);
+
+  const totalSaved = transactions
+    .filter(transaction => transaction.type === "income")
+    .reduce((acc, transaction) => acc + transaction.amount, 0);
+
+  const totalBudget = budget.reduce((acc, b) => acc + b.amount, 0);
+  const totalBudgetLeft = totalBudget - totalSpent;
+
+  return {
+    totalSpent,
+    totalSaved,
+    totalBudgetLeft
+  };
+};
+
 module.exports = { getTransactionsByUser, createTransaction, getMonthlyTransactionsByUser, getIncomeTransactionsByUser, getMonthlyIncomeByUser, updateTransaction, createBudget, getBudgetByUser, updateBudget };
