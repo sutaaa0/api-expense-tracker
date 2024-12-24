@@ -107,4 +107,4 @@ const getUserFinancialSummary = async (userId) => {
   };
 };
 
-module.exports = { getTransactionsByUser, createTransaction, getMonthlyTransactionsByUser, getIncomeTransactionsByUser, getMonthlyIncomeByUser, updateTransaction, createBudget, getBudgetByUser, updateBudget };
+module.exports = { getTransactionsByUser, createTransaction, getMonthlyTransactionsByUser, getIncomeTransactionsByUser, getMonthlyIncomeByUser, updateTransaction, createBudget, getBudgetByUser, updateBudget, getUserFinancialSummary };
