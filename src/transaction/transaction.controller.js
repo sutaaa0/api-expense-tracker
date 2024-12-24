@@ -1,5 +1,5 @@
 const express = require("express");
-const { getTransactionsByUser, createTransaction, getMonthlyTransactionsByUser, getIncomeTransactionsByUser, getMonthlyIncomeByUser, updateTransaction, updateBudget, createBudget, getBudgetByUser } = require("./transaction.service");
+const { getTransactionsByUser, createTransaction, getMonthlyTransactionsByUser, getIncomeTransactionsByUser, getMonthlyIncomeByUser, updateTransaction, updateBudget, createBudget, getBudgetByUser, getUserFinancialSummary } = require("./transaction.service");
 const router = express.Router();
 
 router.get("/:userId", async (req, res) => {
