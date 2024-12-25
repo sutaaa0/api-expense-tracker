@@ -107,7 +107,8 @@ const getUserFinancialSummary = async (userId) => {
     return {
       totalSpent,
       totalSaved,
-      totalBudgetLeft
+      totalBudgetLeft,
+      trend: filteredTransactions.map(transaction => transaction.amount)
     };
   };
 
