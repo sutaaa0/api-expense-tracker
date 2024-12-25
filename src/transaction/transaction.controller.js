@@ -184,4 +184,14 @@ router.get("/:userId/financial-summary", async (req, res) => {
   }
 });
 
+router.get("/:userId/stats", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const summary = await getUserFinancialSummary(userId);
+    res.send(summary);
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+});
+
 module.exports = router;
